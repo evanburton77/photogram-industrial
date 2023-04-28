@@ -24,4 +24,6 @@ class Photo < ApplicationRecord
   has_many :likes
   has_many :comments
   validates(:image, { :presence => true })
+
+  has_many :fans, through: :likes
 end
