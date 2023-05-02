@@ -36,12 +36,16 @@ class User < ApplicationRecord
 
   has_many :received_follow_requests, class_name: "FollowRequest", foreign_key: "recipient_id", dependent: :destroy # cascades destroy all children in collection.
   has_many :accepted_received_follow_requests, -> { accepted }, class_name: "FollowRequest", foreign_key: "recipient_id"
+
+  has_many :pending_received_follow_requests, -> { pending }, class_name: "FollowRequest", foreign_key: "recipient_id"
+  has_many :penders, through: :pending_received_follow_requests, source: :sender
   has_many :sent_follow_requests, class_name: "FollowRequest", foreign_key: "sender_id", dependent: :destroy
-  has_many :accepted_sent_follow_requests, -> { accepted }, class_name: "FollowRequest", foreign_key: "recipient_id"
+  has_many :accepted_sent_follow_requests, -> { accepted }, class_name: "FollowRequest", foreign_key: "sender_id", dependent: :destroy
   has_many :liked_photos, through: :likes, source: :photo
   has_many :leaders, through: :accepted_sent_follow_requests, source: :recipient
   has_many :followers, through: :accepted_received_follow_requests, source: :sender
   has_many :feed, through: :leaders, source: :own_photos
   has_many :discover, through: :leaders, source: :liked_photos
+
   validates :username, presence: true, uniqueness: true
 end

@@ -32,6 +32,16 @@ gem "jbuilder", "~> 2.7"
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", ">= 1.4.4", require: false
 
+# appdev Gems
+gem "faker"
+
+gem "simple_form"
+
+gem "carrierwave"
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
@@ -60,13 +70,6 @@ group :test do
   gem "rspec-html-matchers"
 end
 
-gem "carrierwave"
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-
-# appdev Gems
-gem "faker"
 group :development do
   gem "annotate"
   gem "awesome_print"
