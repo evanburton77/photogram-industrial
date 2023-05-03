@@ -144,7 +144,7 @@ end
 
 def sign_in_user
   new_user = "alice_#{rand(100)}"
-  @user = User.create(username: new_user, email: "#{new_user}@example.com", password: "password")
+  @user = User.create(username: new_user, email: "#{new_user}@example.com", password: "password", private: false)
   visit new_user_session_path
 
   fill_in "Email", with: @user.email

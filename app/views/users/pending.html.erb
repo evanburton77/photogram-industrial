@@ -1,0 +1,14 @@
+
+
+<div class="list-group">
+  <button type="button" class="list-group-item list-group-item-action active" aria-current="true">
+    <%= current_user.username %>'s pending 
+    <span class="badge badge-pill badge-secondary">
+            <%= current_user.penders.count %>
+          </span>
+  </button>
+  <% current_user.penders.each do |pender| %>
+  <button type="button" class="list-group-item list-group-item-action"><%= pender.username %></button>
+  <% end %>
+
+</div>

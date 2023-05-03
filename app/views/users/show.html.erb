@@ -1,0 +1,94 @@
+
+<div class="row">
+  <div class="col-md-6 offset-md-3">
+    <h1><%= @user.username %></h1>
+      <img class="mr-3 rounded-circle" width="128" src="<%= @user.username %>" />
+
+    <ul class="nav nav-pills nav-justified">
+
+      <li class="nav-item">
+        <%= link_to "Posts", user_path(@user.username), class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Liked Photos", liked_photos_path(@user.username), class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Feed", feed_photos_path(@user.username), class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Discover", discover_photos_path(@user.username), class: "nav-link" %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Followers", followers_path(@user.username), class: "nav-link" %>
+      </li>
+      <li class="nav-item" href="#">
+        <%= link_to "Following", following_path(@user.username), class: "nav-link" %>
+      </li>
+    </ul>
+  </div>
+</div>
+
+  <% if FollowRequest.where(recipient_id: current_user).where(sender_id: @user).present? && FollowRequest.where(recipient_id: current_user).where(sender_id: @user).first.status == "pending" %>
+    <%= form_with model: @follow_request_reverse, scope: :follow_request, url: follow_update_path(@follow_request_reverse), method: :patch do |form| %>
+      <%= form.hidden_field :sender_id, :value => @user.id %>
+      <%= form.hidden_field :recipient_id, :value => current_user.id %>
+       <%= form.hidden_field :id, :value => @follow_request_reverse.id %>
+       <%= form.hidden_field :status, :value => "accepted" %>
+      <div class="d-grid gap-2 col-6 mx-auto">
+        <%= form.submit "Accept", class: "btn btn-success" %>
+      </div>
+      
+    <% end %>
+  
+      <%= form_with model: @follow_request_reverse, scope: :follow_request, url: follow_update_path(@follow_request_reverse), method: :patch do |form| %>
+      <%= form.hidden_field :sender_id, :value => @user.id %>
+      <%= form.hidden_field :recipient_id, :value => current_user.id %>
+       <%= form.hidden_field :id, :value => @follow_request_reverse.id %>
+       <%= form.hidden_field :status, :value => "rejected" %>
+      <div class="d-grid gap-2 col-6 mx-auto">
+        <%= form.submit "Reject", class: "btn btn-danger" %>
+      </div>
+  
+    <% end %>
+  <% else %>
+ 
+  <% end %>
+<p></p>
+
+  <% if follow_button_text(@follow_request) == "Follow"  %>
+<%= form_with model: @follow_request, scope: :follow_request, url: follow_create_path do |form| %>
+  <%= form.hidden_field :sender_id, :value => current_user.id %>
+  <%= form.hidden_field :recipient_id, :value => @user.id %>
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <%= form.submit follow_button_text(@follow_request), class: "btn btn-primary" %>
+  </div>
+  <% end %>
+  <% else %>
+  <%= form_with model: @follow_request, method: :delete do |form| %>
+  <%= form.hidden_field :sender_id %>
+  <%= form.hidden_field :recipient_id %>
+  <%= form.hidden_field :status %>
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <%= form.submit follow_button_text(@follow_request), class: "btn btn-primary" %>
+  </div>
+  <% end %>
+<% end %>
+<% if @user.private == false %>
+    <%= @user.own_photos.count %>
+
+    <% @user.own_photos.each do |zebra| %>
+      <%= render "photos/photo", giraffe: zebra %>
+    <% end %>
+<% elsif @user.private? && FollowRequest.where(recipient_id: @user).where(sender_id: current_user).present? %>
+    <%= @user.own_photos.count %>
+
+    <% @user.own_photos.each do |zebra| %>
+      <%= render "photos/photo", giraffe: zebra %>
+    <% end %>
+<% else %>
+  <div class="d-grid gap-2 col-6 mx-auto">
+
+
+  <h2> This user is private.  Press "follow" to request.</h2>
+  </div>
+<% end %>
